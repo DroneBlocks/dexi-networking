@@ -36,6 +36,7 @@ sudo dexi-wifi "SchoolWiFi" "school-password" 10
 ### Create Hotspot
 ```bash
 # Create hotspot with unique name based on device MAC
+# This immediately activates the hotspot and disconnects from other networks
 PARTIAL_MAC=$(cat /sys/class/net/wlan0/address | awk -F: '{print $(NF-1)$NF}')
 sudo dexi-hotspot "dexi_$PARTIAL_MAC" "droneblocks"
 
