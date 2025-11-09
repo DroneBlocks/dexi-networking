@@ -44,6 +44,17 @@ sudo dexi-hotspot "dexi_$PARTIAL_MAC" "droneblocks"
 sudo dexi-hotspot "my-custom-name" "mypassword"
 ```
 
+### Change Hotspot Password
+```bash
+# Update the hotspot password
+sudo nmcli connection modify "dexi-hotspot" wifi-sec.psk "NEW_PASSWORD"
+
+# Reboot to apply the change
+sudo reboot
+```
+
+Note: The password change is saved immediately but requires a reboot to take effect. Connected clients will remain connected until the reboot.
+
 ### Check Network Status
 ```bash
 dexi-status
