@@ -6,8 +6,9 @@ PASSWORD="$2"
 PRIORITY="${3:-10}"
 
 usage() {
-    echo "Usage: $0 <SSID> <PASSWORD> [PRIORITY]"
+    echo "Usage: $0 <SSID> [PASSWORD] [PRIORITY]"
     echo "Example: $0 HomeNetwork mypassword 10"
+    echo "Example: $0 OpenNetwork          (open network, no password)"
     echo "Higher priority numbers connect first (default: 10)"
     exit 1
 }
@@ -17,7 +18,7 @@ log() {
 }
 
 # Validate arguments
-if [ $# -lt 2 ]; then
+if [ $# -lt 1 ]; then
     usage
 fi
 
@@ -30,8 +31,12 @@ log "Configuring WiFi network '$SSID'..."
 nmcli connection delete "$CONNECTION_NAME" 2>/dev/null || true
 
 # Create new WiFi connection
-nmcli connection add type wifi con-name "$CONNECTION_NAME" ifname wlan0 ssid "$SSID" \
-    wifi-sec.key-mgmt wpa-psk wifi-sec.psk "$PASSWORD"
+if [ -n "$PASSWORD" ]; then
+    nmcli connection add type wifi con-name "$CONNECTION_NAME" ifname wlan0 ssid "$SSID" \
+        wifi-sec.key-mgmt wpa-psk wifi-sec.psk "$PASSWORD"
+else
+    nmcli connection add type wifi con-name "$CONNECTION_NAME" ifname wlan0 ssid "$SSID"
+fi
 
 # Set priority (higher number = higher priority)
 nmcli connection modify "$CONNECTION_NAME" connection.autoconnect-priority "$PRIORITY"

@@ -31,6 +31,9 @@ sudo dexi-wifi "HomeNetwork" "your-password" 20
 
 # Add school network (lower priority)
 sudo dexi-wifi "SchoolWiFi" "school-password" 10
+
+# Add an open network (no password)
+sudo dexi-wifi "OpenNetwork"
 ```
 
 ### Create Hotspot
