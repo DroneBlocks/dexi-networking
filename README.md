@@ -74,8 +74,8 @@ sudo dexi-reset keep-hotspot
 
 ## How It Works
 
-1. **Priority System**: Networks with higher priority numbers connect first
-2. **Automatic Fallback**: If no saved networks are available, hotspot activates
+1. **Priority System**: Networks with higher priority numbers connect first. WiFi networks default to priority 10; the hotspot uses priority 0 as a fallback.
+2. **Automatic Fallback**: If no saved WiFi networks are available, the hotspot activates automatically
 3. **MAC-based Naming**: Each device gets a unique hotspot name like `dexi_a4b2`
 4. **Persistent Configuration**: All settings survive reboots
 

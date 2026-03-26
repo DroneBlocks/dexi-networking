@@ -36,8 +36,8 @@ nmcli connection add type wifi ifname "$INTERFACE" con-name "dexi-hotspot" autoc
     wifi-sec.key-mgmt wpa-psk wifi-sec.psk "$PASSWORD" \
     ipv4.method shared ipv4.addresses 192.168.4.1/24
 
-# Set highest priority so hotspot takes precedence when created
-nmcli connection modify "dexi-hotspot" connection.autoconnect-priority 100
+# Set lowest priority so hotspot is a fallback when no WiFi is available
+nmcli connection modify "dexi-hotspot" connection.autoconnect-priority 0
 
 # Disconnect from any current WiFi connections to force hotspot activation
 log "Disconnecting from current networks to activate hotspot..."
