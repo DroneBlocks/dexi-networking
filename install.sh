@@ -30,5 +30,11 @@ ln -sf /usr/local/bin/dexi/create_hotspot.sh /usr/local/bin/dexi-hotspot
 ln -sf /usr/local/bin/dexi/network_status.sh /usr/local/bin/dexi-status
 ln -sf /usr/local/bin/dexi/reset_network.sh /usr/local/bin/dexi-reset
 
+# Install systemd unit that sets the hostname from the wlan0 MAC on first boot
+cp systemd/dexi-set-hostname.service /etc/systemd/system/dexi-set-hostname.service
+systemctl daemon-reload
+systemctl enable dexi-set-hostname.service
+
 log "DEXI networking installed successfully!"
 log "Available commands: dexi-wifi, dexi-hotspot, dexi-status, dexi-reset"
+log "Hostname will be set to dexi-<MAC suffix> on next boot"
