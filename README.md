@@ -4,6 +4,7 @@ Simple, reliable networking scripts for DEXI Raspberry Pi devices.
 
 ## Features
 
+- **Automatic Hostname**: Sets system hostname to `dexi-<MAC suffix>` on first boot
 - **Automatic Hotspot**: Creates unique hotspot based on device MAC address
 - **WiFi Configuration**: Easy command-line WiFi network setup
 - **Priority Management**: Higher priority networks connect first
@@ -38,10 +39,10 @@ sudo dexi-wifi "OpenNetwork"
 
 ### Create Hotspot
 ```bash
-# Create hotspot with unique name based on device MAC
+# Create hotspot with unique name based on device MAC (matches hostname)
 # This immediately activates the hotspot and disconnects from other networks
 PARTIAL_MAC=$(cat /sys/class/net/wlan0/address | awk -F: '{print $(NF-1)$NF}')
-sudo dexi-hotspot "dexi_$PARTIAL_MAC" "droneblocks"
+sudo dexi-hotspot "dexi-$PARTIAL_MAC" "droneblocks"
 
 # Or create custom hotspot
 sudo dexi-hotspot "my-custom-name" "mypassword"
@@ -76,8 +77,20 @@ sudo dexi-reset keep-hotspot
 
 1. **Priority System**: Networks with higher priority numbers connect first. WiFi networks default to priority 10; the hotspot uses priority 0 as a fallback.
 2. **Automatic Fallback**: If no saved WiFi networks are available, the hotspot activates automatically
-3. **MAC-based Naming**: Each device gets a unique hotspot name like `dexi_a4b2`
+3. **MAC-based Naming**: Each device gets a unique hostname and hotspot name like `dexi-a4b2`
 4. **Persistent Configuration**: All settings survive reboots
+
+## Hostname
+
+On first boot the `dexi-set-hostname.service` systemd unit sets the system hostname to `dexi-<last 4 of wlan0 MAC>` (e.g. `dexi-a4b2`). The unit is gated by a sentinel file at `/var/lib/dexi/hostname-set` so it only ever runs once. With avahi running, the device is reachable as `dexi-a4b2.local` from any mDNS-aware client (macOS, modern Windows, Linux with avahi).
+
+To force the hostname to be re-derived (e.g. after swapping wifi hardware):
+
+```bash
+sudo rm /var/lib/dexi/hostname-set
+sudo systemctl start dexi-set-hostname.service
+sudo reboot
+```
 
 ## Integration with DEXI OS Build
 
@@ -91,7 +104,7 @@ cd dexi-networking
 
 # Create unique hotspot
 PARTIAL_MAC=$(cat /sys/class/net/wlan0/address | awk -F: '{print $(NF-1)$NF}')
-./scripts/create_hotspot.sh "dexi_$PARTIAL_MAC" "droneblocks"
+./scripts/create_hotspot.sh "dexi-$PARTIAL_MAC" "droneblocks"
 ```
 
 ## Troubleshooting

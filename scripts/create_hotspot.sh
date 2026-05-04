@@ -7,7 +7,7 @@ INTERFACE="${3:-wlan0}"
 
 usage() {
     echo "Usage: $0 <SSID> <PASSWORD> [INTERFACE]"
-    echo "Example: $0 dexi_a4b2 droneblocks wlan0"
+    echo "Example: $0 dexi-a4b2 droneblocks wlan0"
     exit 1
 }
 
