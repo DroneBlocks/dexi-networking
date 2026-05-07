@@ -3,7 +3,7 @@ Description=Set DEXI hostname from wlan0 MAC on first boot
 ConditionPathExists=!/var/lib/dexi/hostname-set
 DefaultDependencies=no
 After=local-fs.target sys-subsystem-net-devices-wlan0.device
-Before=NetworkManager.service network-pre.target
+Before=NetworkManager.service network-pre.target avahi-daemon.service
 Wants=sys-subsystem-net-devices-wlan0.device
 
 [Service]

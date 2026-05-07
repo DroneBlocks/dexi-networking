@@ -35,4 +35,13 @@ else
 fi
 
 touch "$SENTINEL"
+
+# Restart avahi so it advertises the new hostname via mDNS.
+# On first boot the systemd unit ordering (Before=avahi-daemon.service) handles
+# this, but if the script is run manually we need to bounce avahi ourselves.
+if systemctl is-active --quiet avahi-daemon 2>/dev/null; then
+    systemctl restart avahi-daemon
+    echo "set_hostname: restarted avahi-daemon to advertise $NEW_HOSTNAME.local"
+fi
+
 echo "set_hostname: hostname set to $NEW_HOSTNAME"
