@@ -25,7 +25,11 @@ FULL_MAC=$(cat /sys/class/net/wlan0/address)
 PARTIAL_MAC=$(echo "$FULL_MAC" | awk -F: '{print $(NF-1)$NF}')
 NEW_HOSTNAME="dexi-$PARTIAL_MAC"
 
-hostnamectl set-hostname "$NEW_HOSTNAME"
+# hostnamectl needs D-Bus, which is not up this early (the unit runs with
+# DefaultDependencies=no, before NetworkManager and avahi). Write the file
+# and set the live hostname directly instead.
+echo "$NEW_HOSTNAME" > /etc/hostname
+hostname "$NEW_HOSTNAME" 2>/dev/null || echo "$NEW_HOSTNAME" > /proc/sys/kernel/hostname
 
 # Keep /etc/hosts in sync so sudo and local resolution stay quiet.
 if grep -qE "^127\.0\.1\.1[[:space:]]" /etc/hosts; then
